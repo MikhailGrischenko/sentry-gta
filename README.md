@@ -35,3 +35,24 @@ Sentry integration/plugin
 * https://github.com/butorov/sentry-telegram - Plugin for Sentry which allows sending notification via Telegram messenger
 * https://github.com/mattrobenolt/sentry-twilio - A plugin for Sentry that sends SMS notifications via Twilio
 * https://github.com/Banno/getsentry-kafka - An Apache Kafka plugin for Sentry
+
+Настрока
+=========================
+## Контекст
+```$js
+Sentry.configureScope(function(scope) {
+  scope.setUser({
+    "id": JSON.parse(localStorage.getItem('mage-cache-storage'))['customer']['data_id'],
+    "username": JSON.parse(localStorage.getItem('mage-cache-storage'))['customer']['fullname'] || 'noname',
+  });
+  scope.setExtra("user-data", JSON.parse(localStorage.getItem('mage-cache-storage')));
+});
+```
+## Среда
+При инициализации указываем среду. Среда номер задачи, или dev или prod. Среду берем из url. исключение - garagetools означает прод.
+```$js
+Sentry.init({ 
+    dsn: 'https://<key>@sentry.io/<project>'
+    environment: location.origin.match(/(?<=\:\/\/).+?(?=\.)/)[0], 
+});
+```
